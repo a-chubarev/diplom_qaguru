@@ -11,7 +11,9 @@ export async function createNewBookingDataWithFullFilled(apiClient) {
     let responseData = await response.json()
     return {
             bookingId: responseData.bookingid,
-            bookingGuestData: bookingGuest.data
+            bookingGuestData: bookingGuest.data,
+            responseCode: await response.status(),
+            responseData: await responseData
             }
 }
 
@@ -40,7 +42,7 @@ export class BookingGuest {
     {
         if (firstname) this.data.firstname = faker.person.firstName();
         if (lastname) this.data.lastname = faker.person.lastName();
-        if (totalprice) this.data.totalprice = faker.commerce.price();
+        if (totalprice) this.data.totalprice = parseInt(faker.commerce.price({dec:0}));
         if (depositpaid) this.data.depositpaid = faker.datatype.boolean();
         if (bookingdates) {
             this.data.bookingdates = {

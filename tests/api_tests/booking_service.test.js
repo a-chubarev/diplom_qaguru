@@ -3,6 +3,7 @@ import {ApiClient, createBookingEndpoint, getBookingByIdEndpoint} from "../../se
 import {getBookingIdsEndpoint} from "../../services/api_client";
 import * as dotenv from 'dotenv';
 import {createNewBookingDataWithFullFilled} from "../../services/helpers/api_responses_helpers";
+import {validateCreateBookingResponse} from "../../services/helpers/json_validators";
 
 
 
@@ -29,10 +30,25 @@ test.describe('Booking Service Api tests', () => {
     test('Получить id всех бронирований', async () => {
         let endpoint = getBookingIdsEndpoint();
         let response = await apiClient.get(endpoint);
-        //TODO добавить проверку на соответствие ответа json схеме
+        const responseDataValidate = validateCreateBookingResponse(response.json())
         expect(response.status()).toBe(200);
+        expect(responseDataValidate).toBe(true)
     })
 
+    /**
+     * Создание бронирования. Проверка, что тело ответа соответствует json-схеме
+     * и в параметрах бронирования все значения совпадают с переданными в запросе
+     */
+    test('Создание бронирования', async () => {
+        let createBookingData = await createNewBookingDataWithFullFilled(apiClient)
+        //Проверка, что код ответа - 200
+        expect(createBookingData.responseCode).toBe(200);
+        //Проверка, что данные в ответе совпадают с данными в запросе
+        expect(createBookingData.responseData.booking).toEqual(createBookingData.bookingGuestData)
+        //Проверка, что ответ на запрос соответствует json-схеме
+        const responseDataValidate = validateCreateBookingResponse(createBookingData.responseData)
+        expect(responseDataValidate).toBe(true)
+    })
 
     /**
      * Создание бронирования в базе, получение ее и проверка, что данные в базе соответствуют переданным в запросе
@@ -44,4 +60,14 @@ test.describe('Booking Service Api tests', () => {
         //Сравниваю тело первого запроса и тело ответа на получение информации о созданном бронировании
         expect(createdBookingData.bookingGuestData.data).toEqual(getBookingInfoResponseBody.data)
     })
+
+    /**
+     * Обновление существующего бронирования. Проверка, что при обновлении изменены поля,
+     * которые были переданы в запросе на обновлении, а остальные остались без изменений
+     */
+    test('Обновление существующего бронирования', async () => {
+
+    })
+
+
 })
