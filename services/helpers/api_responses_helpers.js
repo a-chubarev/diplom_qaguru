@@ -1,6 +1,16 @@
 import {faker} from "@faker-js/faker"
-import {createBookingEndpoint, createOrUpdateBookingPayload} from "../api_client";
+import {
+    createBookingEndpoint,
+    createOrUpdateBookingPayload,
+    getBookingByIdEndpoint,
+    updateBookingEndpoint
+} from "../api_client";
 
+/**
+ * Создание нового бронирования
+ * @param apiClient - Api клиент
+ * @returns {Promise<{bookingGuestData: {}, responseData: *, bookingId: *, responseCode: *}>} - объект с данными о созданном бронировании и госте
+ */
 export async function createNewBookingDataWithFullFilled(apiClient) {
     let bookingGuest = new BookingGuest ()
     let payload = createOrUpdateBookingPayload (bookingGuest.data)
@@ -18,6 +28,40 @@ export async function createNewBookingDataWithFullFilled(apiClient) {
 }
 
 /**
+ * Полное обновление данных о бронировании
+ * @param apiClient - Api клиент
+ * @param bookingId
+ * @returns {Promise<{bookingGuestData: {}, responseData: *, bookingId: *, responseCode: *}>} - объект с данными об обновленном бронировании и госте
+ */
+export async function updateBookingDataWithFullFilled(apiClient, bookingId) {
+    let updatedBookingGuest = new BookingGuest ()
+    let payload = createOrUpdateBookingPayload (updatedBookingGuest.data)
+    const response = await apiClient.put(updateBookingEndpoint(bookingId), payload)
+    if (!response.ok) {
+        throw new Error(`Ошибка обновления бронирования. Код ответа ${await response.status()}`)
+    }
+    let responseData = await response.json()
+    return {
+        bookingGuestData: updatedBookingGuest.data,
+        responseCode: await response.status(),
+        responseData: await responseData
+    }
+}
+
+/**
+ *
+ * @param apiClient - Api клиент
+ * @param bookingId - Id бронирования
+ * @returns {Promise<*>} - информация о бронировании
+ */
+export async function getBookingInformationByBookingId(apiClient, bookingId) {
+    let getBookingInfo = await apiClient.get(getBookingByIdEndpoint(bookingId))
+    let responseBody = await getBookingInfo.text()
+    return await getBookingInfo.json()
+}
+
+/**
+ * Класс для создания нового гостя.
  * Генерирует JSON-данные на основе переданных флагов.
  */
 export class BookingGuest {

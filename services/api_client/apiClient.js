@@ -76,6 +76,31 @@ export class ApiClient {
     }
 
     /**
+     * PUT-запрос к API
+     * @param {string} endpoint - Эндпоинт
+     * @param {Object} payload - Тело запроса
+     * @returns {Promise<import('@playwright/test').APIResponse>}
+     */
+    async put(endpoint, payload) {
+        return await this.apiRequestContext.put(`${this.baseUrl}${endpoint}`, {
+            headers: this.getHeaders(),
+            data: payload,
+        });
+    }
+
+    /**
+     * DELETE-запрос к API
+     * @param {string} endpoint - Эндпоинт
+     * @returns {Promise<import('@playwright/test').APIResponse>}
+     */
+    async delete(endpoint) {
+        const url = `${this.baseUrl}${endpoint}`;
+        return await this.apiRequestContext.get(url, {
+            headers: this.getHeaders(),
+        });
+    }
+
+    /**
      * Возвращает заголовки с токеном авторизации
      * @returns {Object}
      */
