@@ -5,14 +5,14 @@
 export const authEndpoint = `auth`
 
 /**
- * Получение списка ID книг - с фильтрами и без.
+ * Получение списка ID бронирований - с фильтрами и без.
  * Добавил encodeURIComponent чтобы не валились запросы на символах,
  * которые невалидны для url-ов
- * @param firstname - Имя автора
- * @param lastname - Фамилия автора
- * //TODO исправить описание переменных с датам
- * @param checkinDate - дата добавления книги
- * @param checkoutDate - дата "выезда книги"
+ * @param firstname - Имя
+ * @param lastname - Фамилия
+ * //TODO исправить описание переменных с датами
+ * @param checkinDate - дата заезда
+ * @param checkoutDate - дата выезда
  * @returns {string}
  */
 export const getBookingIdsEndpoint = (firstname, lastname, checkinDate, checkoutDate) => {
@@ -37,27 +37,27 @@ export const getBookingIdsEndpoint = (firstname, lastname, checkinDate, checkout
 };
 
 /**
- * Получение книги по Id
- * @param id - id книги
+ * Получение бронирования по Id
+ * @param id - id записи
  * @returns {string}
  */
-export const getBookingByIdEndpoint = (id) => `${id}`
+export const getBookingByIdEndpoint = (id) => `booking/${id}`
 
 /**
- * Создание книги
+ * Создание бронирования
  */
 export const createBookingEndpoint = `booking`
 
 /**
- * Обновление информации о книге
- * @param id - id книги
+ * Обновление информации о бронировании
+ * @param id - id записи
  * @returns {`booking/${string}`}
  */
 export const updateBookingEndpoint = (id) => `booking/${id}`
 
 /**
- * Удаление книги
- * @param id - id книги
+ * Удаление бронирования
+ * @param id - id записи
  * @returns {`booking/${string}`}
  */
 export const deleteBookingEndpoint = (id) => `booking/${id}`

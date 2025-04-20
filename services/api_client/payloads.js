@@ -9,9 +9,9 @@ export const authPayload = (clientLogin, clientPassword) => {
 };
 
 /**
- * Тело запроса для создания книги
- * @param firstname - имя автора
- * @param lastname - фамилия автора
+ * Тело запроса для создания бронирования
+ * @param firstname - имя
+ * @param lastname - фамилия
  * @param totalprice - цена
  * @param depositpaid - депозит
  * //TODO проверить как будет работать
