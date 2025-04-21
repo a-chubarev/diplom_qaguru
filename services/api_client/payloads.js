@@ -1,14 +1,4 @@
 /**
- * Тело запроса для авторизации
- * @param clientLogin - логин
- * @param clientPassword - пароль
- * @returns {{password, username}} - json-тело запроса для авторизации
- */
-export const authPayload = (clientLogin, clientPassword) => {
-    return { username: clientLogin, password: clientPassword };
-};
-
-/**
  * Тело запроса для создания бронирования
  * @param firstname - имя
  * @param lastname - фамилия

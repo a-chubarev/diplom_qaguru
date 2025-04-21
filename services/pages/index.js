@@ -1,0 +1,6 @@
+export * from './main-page'
+export * from './products-page'
+export * from './product-card'
+export * from './register-page'
+export * from './forgot-password-page'
+export * from './user-cart-page'
