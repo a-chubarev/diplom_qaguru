@@ -22,6 +22,9 @@ export class ProductCard {
         // Локатор для выпадающего списка валют
         this.currencySelect = page.locator('#ec_currency_conversion');
 
+        //Локатор для ссылки на производителя товара
+        this.manufacturerLink = page.locator('.ec_details_manufacturer a');
+
         //Локаторы для публикации комментария
         this.commentTextarea = page.locator('#comment');
         this.authorInput = page.locator('#author');
@@ -39,6 +42,9 @@ export class ProductCard {
         this.minusProductQuantityButton = page.locator('.ec_minus');
         this.plusProductQuantityButton = page.locator('.ec_plus');
         this.quantityInputField = page.locator('.product-card__quantity-input');
+
+        //Локаторы для списка покупок (Shopping cart)
+        this.shopingCartCheckoutButton = page.locator('.ec_cart_widget_minicart_checkout_button');
 
     }
 
