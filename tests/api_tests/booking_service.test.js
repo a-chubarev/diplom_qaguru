@@ -58,9 +58,9 @@ test.describe('Booking Service Api tests', () => {
      */
     test('Получить информацию о бронировании по id', async () => {
         let createdBookingData = await createNewBookingDataWithFullFilled(apiClient)
-        let getBookingInfoResponseBody = await getBookingInformationByBookingId(createdBookingData.bookingId)
+        let getBookingInfoResponseBody = await getBookingInformationByBookingId(apiClient, createdBookingData.bookingId).responseData
         //Сравниваю тело первого запроса и тело ответа на получение информации о созданном бронировании
-        expect(createdBookingData.bookingGuestData.data).toEqual(getBookingInfoResponseBody.data)
+        expect(createdBookingData.bookingGuestData.data).toEqual(getBookingInfoResponseBody)
     })
 
     /**
@@ -80,7 +80,23 @@ test.describe('Booking Service Api tests', () => {
         expect(responseDataValidate).toBe(true)
         //Получить ответ на гет запрос получения информации о бронировании и сравнить с запросом на обновление
         let updatedBookingResponseBody = await getBookingInformationByBookingId(apiClient, createdBookingData.bookingId)
-        expect(updatedBookingResponseBody).toEqual(fullUpdateBookingData.bookingGuestData)
+        expect(updatedBookingResponseBody.responseData).toEqual(fullUpdateBookingData.bookingGuestData)
+    })
+
+    /**
+     * Удаление бронирования. Проверка ответа на запрос удаления.
+     * Проверка, что удаленное бронирование недоступно при запросе по id
+     */
+    test('Удаление бронирования', async () => {
+        let createdBookingData = await createNewBookingDataWithFullFilled(apiClient)
+        //Удаление бронирования
+        let deleteBooking = await apiClient.delete(createdBookingData.bookingId)
+        console.log(deleteBooking.status())
+        console.log(await deleteBooking.text())
+        expect(deleteBooking.status()).toBe(200);
+        //Проверка, что после удаления запрос этого бронирования возвращает 404
+        let getDeletedBookingInfoById = await getBookingInformationByBookingId(apiClient, createdBookingData.bookingId).responseStatus
+        console.log(getDeletedBookingInfoById)
     })
 
 

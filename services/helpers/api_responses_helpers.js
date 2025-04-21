@@ -56,8 +56,7 @@ export async function updateBookingDataWithFullFilled(apiClient, bookingId) {
  */
 export async function getBookingInformationByBookingId(apiClient, bookingId) {
     let getBookingInfo = await apiClient.get(getBookingByIdEndpoint(bookingId))
-    let responseBody = await getBookingInfo.text()
-    return await getBookingInfo.json()
+    return {responseData: await getBookingInfo.json(), responseStatus: getBookingInfo.status() };
 }
 
 /**

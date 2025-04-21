@@ -52,6 +52,4 @@ export function validateCreateBookingResponse(data) {
     else if (isValid) {
         return true
     }
-
-
 }
