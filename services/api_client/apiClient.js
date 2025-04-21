@@ -47,7 +47,6 @@ export class ApiClient {
             throw new Error('Авторизация не пройдена. Ответ не содержит токен.');
         }
         this.token = responseBody.token;
-        console.log('Токен получен:', this.token);
     }
 
     /**
@@ -94,8 +93,7 @@ export class ApiClient {
      * @returns {Promise<import('@playwright/test').APIResponse>}
      */
     async delete(endpoint) {
-        const url = `${this.baseUrl}${endpoint}`;
-        return await this.apiRequestContext.get(url, {
+        const url = `${this.baseUrl}${endpoint}`;        return await this.apiRequestContext.delete(url, {
             headers: this.getHeaders(),
         });
     }
@@ -106,7 +104,7 @@ export class ApiClient {
      */
     getHeaders() {
         if (!this.token) {
-            throw new Error('Токен не установлен. Сначала выполните метод authenticate().');
+            throw new Error('Токен не получен.');
         }
 
         return {

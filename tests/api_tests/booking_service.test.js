@@ -1,9 +1,14 @@
 import {expect, test} from "playwright/test";
-import {ApiClient, createBookingEndpoint, getBookingByIdEndpoint} from "../../services/api_client";
+import {
+    ApiClient,
+    createBookingEndpoint,
+    deleteBookingEndpoint,
+    getBookingByIdEndpoint
+} from "../../services/api_client";
 import {getBookingIdsEndpoint} from "../../services/api_client";
 import * as dotenv from 'dotenv';
 import {
-    createNewBookingDataWithFullFilled, getBookingInformationByBookingId,
+    createNewBookingDataWithFullFilled, getBookingInformationByBookingId, updateBookingDataWithCustomFilled,
     updateBookingDataWithFullFilled
 } from "../../services/helpers/api_responses_helpers";
 import {validateCreateBookingResponse} from "../../services/helpers/json_validators";
@@ -90,14 +95,10 @@ test.describe('Booking Service Api tests', () => {
     test('Удаление бронирования', async () => {
         let createdBookingData = await createNewBookingDataWithFullFilled(apiClient)
         //Удаление бронирования
-        let deleteBooking = await apiClient.delete(createdBookingData.bookingId)
-        console.log(deleteBooking.status())
-        console.log(await deleteBooking.text())
-        expect(deleteBooking.status()).toBe(200);
+        let deleteBooking = await apiClient.delete(deleteBookingEndpoint(createdBookingData.bookingId))
+        expect(deleteBooking.status()).toBe(201);
         //Проверка, что после удаления запрос этого бронирования возвращает 404
-        let getDeletedBookingInfoById = await getBookingInformationByBookingId(apiClient, createdBookingData.bookingId).responseStatus
-        console.log(getDeletedBookingInfoById)
+        let getDeletedBookingInfoById = await apiClient.get(getBookingByIdEndpoint(createdBookingData.bookingId))
+        expect(await getDeletedBookingInfoById.status()).toBe(404);
     })
-
-
 })
