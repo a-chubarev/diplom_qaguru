@@ -1,5 +1,5 @@
 import {expect, test} from "@playwright/test";
-import {MainPage, ProductsPage, ProductCard, RegisterPage, ForgotPasswordPage, UserCartPage} from '../../services/pages'
+import {MainPage, ProductsPage, ProductCard, RegisterPage, ForgotPasswordPage, UserCartPage, BugPopup} from '../../services/pages'
 
 test.describe.serial('Academybugs Test', () => {
     let mainPage
@@ -8,6 +8,7 @@ test.describe.serial('Academybugs Test', () => {
     let registerPage
     let forgotPasswordPage
     let userCartPage
+    let bugPopup
     test.beforeEach(async ({page}) =>{
         mainPage = new MainPage(page);
         productsPage = new ProductsPage(page);
@@ -15,6 +16,7 @@ test.describe.serial('Academybugs Test', () => {
         registerPage = new RegisterPage(page);
         forgotPasswordPage = new ForgotPasswordPage(page);
         userCartPage = new UserCartPage(page);
+        bugPopup = new BugPopup(page);
         await mainPage.openPage()
     })
 
@@ -53,6 +55,26 @@ test.describe.serial('Academybugs Test', () => {
         await expect(mainPage.nonCrashBugMessage).toBeVisible()
     })
 
+    test('The page becomes unresponsive when clicking on "Post Comment"', {tag: ['@High', '@Crash']}, async ({}) => {
+        await productsPage.productItem('4481370').click()
+        await productCard.fillProductReply()
+        await expect(mainPage.bugMessage).toBeVisible()
+    })
+
+    test('The Sign In button overlaps the footer', {tag: ['@Low', '@Visual']}, async ({}) => {
+        await productsPage.productItem('4481370').click()
+        await productCard.clickSignInButton()
+        await expect(mainPage.nonCrashBugMessage).toBeVisible()
+    })
+
+    test('The Sign In button overlaps the footer', {tag: ['@Low', '@Visual']}, async ({}) => {
+        await productsPage.productItem('4481370').click()
+        await productCard.clickSignInButton()
+        await bugPopup.clickCloseButton()
+
+        await expect(mainPage.nonCrashBugMessage).toBeVisible()
+    })
+
 
 
     test('The page becomes unresponsive when clicking on "Retrieve Password" and no email is sent', async ({}) => {
@@ -64,11 +86,7 @@ test.describe.serial('Academybugs Test', () => {
         await expect(mainPage.bugMessage).toBeVisible()
     })
 
-    test('The page becomes unresponsive when clicking on "Post Comment"', async ({}) => {
-        await productsPage.productItem('4481370').click()
-        await productCard.fillProductReply()
-        await expect(mainPage.bugMessage).toBeVisible()
-    })
+
 
     test(' The page becomes unresponsive when increasing the quantity with the pink or green colors chosen', async ({}) => {
         await productsPage.productItem('4381370').click()
