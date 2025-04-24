@@ -30,6 +30,9 @@ export class UserCartPage {
         // Подарочная карта
         this.giftCardInput = page.locator('#ec_gift_card');
         this.redeemGiftCardButton = page.locator('#ec_apply_gift_card');
+
+        //Кнопка возврата к магазину при пустой корзине
+        this.returnButton = page.locator('.ec_cart_empty_button.academy-bug')
     }
 
     /**
@@ -115,5 +118,10 @@ export class UserCartPage {
      */
     async continueShopping() {
         await this.continueShoppingButton.click();
+    }
+
+    //Вернуться к магазину
+    async returnButtonClick() {
+        await this.returnButton.click();
     }
 }

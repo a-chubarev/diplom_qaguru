@@ -29,6 +29,14 @@ export class ProductsPage {
             this.productItem(productId).locator('a:has-text("Select Options")').first();
     }
 
+    async clickProductItem(productId) {
+        await this.productItem(productId).click();
+    }
+
+    async clickProductImage(productId) {
+        await this.productImage(productId).click();
+    }
+
     /**
      * Метод для выбора количества элементов на странице.
      * @param option - количество товаров на странице. Допустимое количество - 10, 25, 50

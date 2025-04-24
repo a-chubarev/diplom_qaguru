@@ -1,4 +1,4 @@
-class LoginPage {
+export class LoginPage {
     constructor(page) {
         this.page = page;
 
@@ -13,9 +13,14 @@ class LoginPage {
         this.loginError = page.locator('.ec_account_error > div');
         this.returningCustomerHeader = page.locator('.ec_cart_header.ec_top').first();
         this.newUserHeader = page.locator('.ec_account_right .ec_cart_header.ec_top');
+        this.notRegisteredLinkLocator = page.locator('.ec_account_subheader.untranslated-russian');
     }
 
     async clickSignInButton() {
         await this.signInButton.click();
+    }
+
+    async clickNotRegisteredLinkLocator() {
+        await this.notRegisteredLinkLocator.click();
     }
 }

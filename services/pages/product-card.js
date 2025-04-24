@@ -11,7 +11,7 @@ export class ProductCard {
         this.productImage = page.locator('.product-card__image');
         this.productName = page.locator('.product-card__name');
         this.productPrice = page.locator('.product-card__price');
-        this.addToCartButton = page.locator('.product-card__add-to-cart');
+        this.addToCartButton = page.locator('input[value="ADD TO CART"]');
         this.favoriteButton = page.locator('.product-card__favorite');
 
         //Локатор для выбора цвета товара
@@ -46,6 +46,14 @@ export class ProductCard {
         //Локаторы для списка покупок (Shopping cart)
         this.shopingCartCheckoutButton = page.locator('.ec_cart_widget_minicart_checkout_button');
 
+        // Локаторы для виджета выбора цены
+        this.pricePointWidget = page.locator('.ec_pricepoint_widget');
+        this.pricePointOption = (priceRange) => this.pricePointWidget.locator(`a:has-text("${priceRange}")`);
+
+    }
+
+    async clickManufacturerLink() {
+        await this.manufacturerLink.click();
     }
 
     /**
@@ -128,7 +136,7 @@ export class ProductCard {
      *Нажать на кнопку Sign In (Авторизация)
      */
     async clickSignInButton() {
-        await this.signInButton.click();
+        await this.signInButton.click({ force: true });
     }
 
     /**
@@ -177,5 +185,33 @@ export class ProductCard {
         for (let i = 0; i < times; i++) {
             await this.minusProductQuantityButton.click();
         }
+    }
+
+    /**
+     * Выбрать ценовой диапазон из виджета выбора цены
+     * @param {string} priceRange - Текст ценового диапазона (например, "$15.00 - $19.99 (1)")
+     * @returns {Promise<void>}
+     */
+    async selectPriceRange(priceRange) {
+        const pricePointOptions = await this.pricePointWidget.locator('a.menu_link').allTextContents();
+        console.log(pricePointOptions);
+        const pricePointOption = this.pricePointOption(priceRange);
+        if (await pricePointOption.isVisible()) {
+            await pricePointOption.click();
+        } else {
+            throw new Error(`Ценовой диапазон "${priceRange}" не найден.`);
+        }
+    }
+
+    /**
+     * Проверить, отображается ли виджет цены
+     * @returns {Promise<boolean>}
+     */
+    async isPricePointWidgetVisible() {
+        return await this.pricePointWidget.isVisible();
+    }
+
+    async clickAddToCartButton(){
+        await this.addToCartButton.click()
     }
 }
