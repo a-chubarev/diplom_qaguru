@@ -1,17 +1,16 @@
 import {expect, test} from "playwright/test";
 import {
     ApiClient,
-    createBookingEndpoint,
     deleteBookingEndpoint,
     getBookingByIdEndpoint
 } from "../../services/api_client";
 import {getBookingIdsEndpoint} from "../../services/api_client";
 import * as dotenv from 'dotenv';
 import {
-    createNewBookingDataWithFullFilled, getBookingInformationByBookingId, updateBookingDataWithCustomFilled,
+    createNewBookingDataWithFullFilled, getBookingInformationByBookingId,
     updateBookingDataWithFullFilled
-} from "../../services/helpers/api_responses_helpers";
-import {validateCreateBookingResponse} from "../../services/helpers/json_validators";
+} from "../../services/helpers";
+import {validateCreateBookingResponse} from "../../services/helpers";
 
 
 
