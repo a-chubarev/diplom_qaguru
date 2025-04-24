@@ -22,7 +22,7 @@ jobs:
         run: npx playwright install --with-deps
       # Переменная BASE URL не из env, а из secrets github
       - name: Set environment variables
-      - run: |
+        run: |
           echo "BOOKSTORE_BASE_URL=${{ secrets.BOOKSTORE_BASE_URL }}" >> $GITHUB_ENV
           echo "BOOKSTORE_CLIENT_LOGIN=${{ secrets.BOOKSTORE_CLIENT_LOGIN }}" >> $GITHUB_ENV
           echo "BOOKSTORE_CLIENT_PASSWORD=${{ secrets.BOOKSTORE_CLIENT_PASSWORD }}" >> $GITHUB_ENV
