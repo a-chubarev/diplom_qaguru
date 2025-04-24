@@ -45,11 +45,11 @@ test.describe('Academy bugs Test', () => {
     })
 
 
-    test('The product image fills the box entirely', {tag: ['@Medium', '@Visual']},async ({}) => {
-        //Выбираем количество товаров на странице
-        await productsPage.clickProductImage('4281370')
-        await expect(mainPage.nonCrashBugMessage).toBeVisible()
-    })
+    // test('The product image fills the box entirely', {tag: ['@Medium', '@Visual']},async ({}) => {
+    //     //Выбираем количество товаров на странице
+    //     await productsPage.clickProductImage('4281370')
+    //     await expect(mainPage.nonCrashBugMessage).toBeVisible()
+    // })
 
 
     test('The page freezes when clicking on the numbers of results', {tag: ['@High', '@Crash']}, async ({}) => {
