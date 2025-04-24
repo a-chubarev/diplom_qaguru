@@ -8,7 +8,7 @@ export class BugPopup {
             .getByRole('heading', { name: 'You found a crash bug, examine the page for 5 seconds' })
             .first();
         this.nonCrashBugMessage = this.page.locator('#bug-popup');
-        this.popup = page.locator('#bug-popup');
+        this.popup = this.page.locator('#bug-popup');
         // Кнопка закрытия
         this.closeButton = page.locator('#close-popup');
         // Радиокнопки "What type of issue is it?"
