@@ -1,0 +1,51 @@
+<div id="bug-popup" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 2px solid rgb(204, 204, 204); border-radius: 12px; padding: 20px; z-index: 9999; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 15px; font-family: Arial, sans-serif;">
+
+  <div style="text-align: right;">
+    <span id="close-popup" style="position: fixed; cursor: pointer; top: 0%;right: 2%; font-weight: bold; font-size: 28px; color: #888;">×</span>
+  </div>
+  <h3 style="text-align: center; font-size: 1.5em; color: #333; margin-bottom: 15px;">What did you find out?</h3>
+
+  <p style="font-weight: bold; margin-bottom: 10px;">What type of issue is it?</p>
+  <div>
+
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer1" value="Functional" style="margin-right: 5px;"> Functional
+    </label>
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer1" value="Visual" style="margin-right: 5px;"> Visual
+    </label>
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer1" value="Content" style="margin-right: 5px;"> Content
+    </label>
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer1" value="Performance" style="margin-right: 5px;"> Performance
+    </label>
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer1" value="Crash" style="margin-right: 5px;"> Crash
+    </label>
+  </div>
+
+  <p style="font-weight: bold; margin-top: 15px; margin-bottom: 10px;">What should be the expected result?</p>
+  <div>
+
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer2" value="The website should be in the user's local language" style="margin-right: 5px;"> The website should be in the user's local language
+    </label>
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer2" value="The text under the New User section is in English" style="margin-right: 5px;"> The text under the New User section is in English
+    </label>
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer2" value="User should have a translate button to translate the text in your local language" style="margin-right: 5px;"> User should have a translate button to translate the text in your local language
+    </label>
+    <label style="display: block; margin: 5px 0; font-size: 14px;">
+      <input type="radio" name="answer2" value="The font-size should be larger" style="margin-right: 5px;"> The font-size should be larger
+    </label>
+  </div>
+
+  <div style="text-align: center; margin-top: 15px;">
+    <button id="submit-popup" style="padding: 10px 20px; background-color: #28a745; color: white;
+                      border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
+      Submit
+    </button>
+  </div>
+</div>
