@@ -45,7 +45,7 @@ test.describe('Academy bugs Test', () => {
     })
 
 
-    test('The product image fills the box entirely', {tag: ['@Medium', '@Visual']},async ({page}) => {
+    test('The product image fills the box entirely', {tag: ['@Medium', '@Visual']},async ({}) => {
         //Выбираем количество товаров на странице
         await productsPage.clickProductImage('4281370')
         //await page.waitForTimeout(40000)
