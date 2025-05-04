@@ -1,59 +1,37 @@
-import {expect, test} from "playwright/test";
-import {
-    ApiClient,
-    deleteBookingEndpoint,
-    getBookingByIdEndpoint
-} from "../../services/api_client";
-import {getBookingIdsEndpoint} from "../../services/api_client";
-import * as dotenv from 'dotenv';
-import {
-    createNewBookingDataWithFullFilled, getBookingInformationByBookingId,
-    updateBookingDataWithFullFilled
-} from "../../services/helpers";
-import {validateCreateBookingResponse} from "../../services/helpers";
 
+import { test, expect } from '@playwright/test';
+import { ApiClient } from '../../services/api/client/api.client';
+import {BookingGuest, validateCreateBookingResponse} from "../../services/helpers";
 
+test.describe('Booking API Tests', () => {
+    let apiClient;
 
-test.describe('Booking Service Api tests', () => {
-    dotenv.config();
-
-    const URL = process.env.BOOKSTORE_BASE_URL
-    const userLogin = process.env.BOOKSTORE_CLIENT_LOGIN
-    const userPassword = process.env.BOOKSTORE_CLIENT_PASSWORD
-    let apiClient
-    let apiRequestContext
-
-    test.beforeAll('Authorize',async ({playwright}) => {
-        apiRequestContext = await playwright.request.newContext({
-            baseURL: URL,
-        });
-        apiClient = new ApiClient(URL, userLogin, userPassword, apiRequestContext);
+    test.beforeAll(async () => {
+        apiClient = await ApiClient.unauthorized();
         await apiClient.authenticate();
     });
 
     /**
-     * Тест на проверку эндпоинта на получение всех бронирований и соответствие тела ответа json-схеме
-     */
+    * Тест на проверку эндпоинта на получение всех бронирований
+    */
     test('Получить id всех бронирований', async () => {
-        let endpoint = getBookingIdsEndpoint();
-        let response = await apiClient.get(endpoint);
-        const responseDataValidate = validateCreateBookingResponse(response.json())
-        expect(response.status()).toBe(200);
-        expect(responseDataValidate).toBe(true)
+        let response = await apiClient.booking.getBookings();
+        expect(response.status).toBe(200);
     })
 
     /**
-     * Создание бронирования. Проверка, что тело ответа соответствует json-схеме
-     * и в параметрах бронирования все значения совпадают с переданными в запросе
-     */
+    * Создание бронирования. Проверка, что тело ответа соответствует json-схеме
+    * и в параметрах бронирования все значения совпадают с переданными в запросе
+    */
     test('Создание бронирования', async () => {
-        let createBookingData = await createNewBookingDataWithFullFilled(apiClient)
+        const bookingGuest = new BookingGuest()
+        let createBookingData = await apiClient.booking.createBooking(bookingGuest.data);
         //Проверка, что код ответа - 200
-        expect(createBookingData.responseCode).toBe(200);
+        expect(createBookingData.status).toBe(200);
         //Проверка, что данные в ответе совпадают с данными в запросе
-        expect(createBookingData.responseData.booking).toEqual(createBookingData.bookingGuestData)
+        expect(createBookingData.json.booking).toEqual(bookingGuest.data)
         //Проверка, что ответ на запрос соответствует json-схеме
-        const responseDataValidate = validateCreateBookingResponse(createBookingData.responseData)
+        const responseDataValidate = validateCreateBookingResponse(createBookingData.json)
         expect(responseDataValidate).toBe(true)
     })
 
@@ -61,10 +39,11 @@ test.describe('Booking Service Api tests', () => {
      * Создание бронирования в базе, получение ее и проверка, что данные в базе соответствуют переданным в запросе
      */
     test('Получить информацию о бронировании по id', async () => {
-        let createdBookingData = await createNewBookingDataWithFullFilled(apiClient)
-        let getBookingInfoResponseBody = await getBookingInformationByBookingId(apiClient, createdBookingData.bookingId).responseData
+        const bookingGuest = new BookingGuest()
+        let createdBookingData = await apiClient.booking.createBooking(bookingGuest.data)
+        let getBookingInfoResponseBody = await apiClient.booking.getBookingById(createdBookingData.json.bookingid)
         //Сравниваю тело первого запроса и тело ответа на получение информации о созданном бронировании
-        expect(createdBookingData.bookingGuestData.data).toEqual(getBookingInfoResponseBody)
+        expect(createdBookingData.json.booking).toEqual(getBookingInfoResponseBody.json)
     })
 
     /**
@@ -72,19 +51,21 @@ test.describe('Booking Service Api tests', () => {
      * которые были переданы в запросе на обновлении, а остальные остались без изменений
      */
     test('Обновление существующего бронирования', async () => {
-        let createdBookingData = await createNewBookingDataWithFullFilled(apiClient)
+        const bookingGuest = new BookingGuest()
+        let createdBookingData = await apiClient.booking.createBooking(bookingGuest.data)
         //Обновляем созданное бронирование
-        let fullUpdateBookingData = await updateBookingDataWithFullFilled(apiClient, createdBookingData.bookingId)
+        const updatedBookingGuest = new BookingGuest()
+        let fullUpdateBookingData = await apiClient.booking.updateBooking(createdBookingData.json.bookingid, updatedBookingGuest.data, apiClient.token)
         //Проверка, что код ответа 200
-        expect(fullUpdateBookingData.responseCode).toBe(200);
+        expect(fullUpdateBookingData.status).toBe(200);
         //Проверка, что тело ответа соответствует телу запроса
-        expect(fullUpdateBookingData.responseData).toEqual(fullUpdateBookingData.bookingGuestData)
+        expect(updatedBookingGuest.data).toEqual(fullUpdateBookingData.json)
         //Проверка, что ответ на запрос соответствует json-схеме
-        const responseDataValidate = validateCreateBookingResponse(fullUpdateBookingData.responseData)
+        const responseDataValidate = validateCreateBookingResponse(fullUpdateBookingData.json)
         expect(responseDataValidate).toBe(true)
         //Получить ответ на гет запрос получения информации о бронировании и сравнить с запросом на обновление
-        let updatedBookingResponseBody = await getBookingInformationByBookingId(apiClient, createdBookingData.bookingId)
-        expect(updatedBookingResponseBody.responseData).toEqual(fullUpdateBookingData.bookingGuestData)
+        let updatedBookingResponseBody = await apiClient.booking.getBookingById(createdBookingData.json.bookingid)
+        expect(updatedBookingResponseBody.json).toEqual(fullUpdateBookingData.json)
     })
 
     /**
@@ -92,12 +73,13 @@ test.describe('Booking Service Api tests', () => {
      * Проверка, что удаленное бронирование недоступно при запросе по id
      */
     test('Удаление бронирования', async () => {
-        let createdBookingData = await createNewBookingDataWithFullFilled(apiClient)
+        let bookingGuest = new BookingGuest()
+        let createdBookingData = await apiClient.booking.createBooking(bookingGuest.data)
         //Удаление бронирования
-        let deleteBooking = await apiClient.delete(deleteBookingEndpoint(createdBookingData.bookingId))
-        expect(deleteBooking.status()).toBe(201);
+        let deleteBooking = await apiClient.booking.deleteBooking(createdBookingData.json.bookingid, apiClient.token)
+        expect(deleteBooking.status).toBe(201);
         //Проверка, что после удаления запрос этого бронирования возвращает 404
-        let getDeletedBookingInfoById = await apiClient.get(getBookingByIdEndpoint(createdBookingData.bookingId))
-        expect(await getDeletedBookingInfoById.status()).toBe(404);
+        let getDeletedBookingInfoById = await apiClient.booking.getBookingById(createdBookingData.json.bookingid)
+        expect(await getDeletedBookingInfoById.status).toBe(404);
     })
-})
+});
