@@ -1,5 +1,4 @@
-
-import { request } from '@playwright/test';
+import {request} from '@playwright/test';
 
 
 export class Request {
@@ -21,8 +20,6 @@ export class Request {
             options.data = data;
         }
 
-        const response = await context.fetch(path, options);
-
-        return response;
+        return await context.fetch(path, options);
     }
 }
