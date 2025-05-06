@@ -21,15 +21,18 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Install playwright-test-stats
-        run: npm install -g playwright-test-stats
-
-      - name: Set environment variables
+      - name: Get test stats from playwright-report/results
+        id: test_stats
         run: |
-          echo "BOOKSTORE_BASE_URL=${{ secrets.BOOKSTORE_BASE_URL }}" >> $GITHUB_ENV
-          echo "BOOKSTORE_CLIENT_LOGIN=${{ secrets.BOOKSTORE_CLIENT_LOGIN }}" >> $GITHUB_ENV
-          echo "BOOKSTORE_CLIENT_PASSWORD=${{ secrets.BOOKSTORE_CLIENT_PASSWORD }}" >> $GITHUB_ENV
-          echo "UI_TESTS_BASE_URL=${{ secrets.UI_TESTS_BASE_URL }}" >> $GITHUB_ENV
+          PASSED=$(find playwright-report/results -type f -name "*.json" | xargs jq -r '.results[] | select(.status == "passed")' | wc -l)
+          FAILED=$(find playwright-report/results -type f -name "*.json" | xargs jq -r '.results[] | select(.status == "failed")' | wc -l)
+          SKIPPED=$(find playwright-report/results -type f -name "*.json" | xargs jq -r '.results[] | select(.status == "skipped")' | wc -l)
+          TOTAL=$((PASSED + FAILED + SKIPPED))
+          
+          echo "PASSED=$PASSED" >> $GITHUB_ENV
+          echo "FAILED=$FAILED" >> $GITHUB_ENV
+          echo "SKIPPED=$SKIPPED" >> $GITHUB_ENV
+          echo "TOTAL=$TOTAL" >> $GITHUB_ENV
 
       # Переменная BASE URL не из env, а из secrets github
       - name: Set environment variables
