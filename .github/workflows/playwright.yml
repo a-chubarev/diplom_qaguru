@@ -101,7 +101,7 @@ jobs:
             --endpoint https://allure.autotests.cloud \
             --project-id 4729 \
             --token ${{ secrets.ALLURE_TOKEN }} \
-            --insecure
+            --insecure \
             --launch-name "GitHub Run #${{ github.run_number }}"          publish_branch: gh-pages
 
       - name: Notify Telegram
