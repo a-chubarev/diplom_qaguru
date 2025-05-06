@@ -42,14 +42,15 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
 
-      - name: Get test stats from playwright-report/results
+      - name: Get test stats from allure-results
         id: test_stats
         run: |
-          PASSED=$(find playwright-report/results -type f -name "*.json" | xargs jq -r '.results[] | select(.status == "passed")' | grep -v 'null' | wc -l)
-          FAILED=$(find playwright-report/results -type f -name "*.json" | xargs jq -r '.results[] | select(.status == "failed")' | grep -v 'null' | wc -l)
-          SKIPPED=$(find playwright-report/results -type f -name "*.json" | xargs jq -r '.results[] | select(.status == "skipped")' | grep -v 'null' | wc -l)
+          # Считаем количество успешных, упавших и пропущенных тестов
+          PASSED=$(find allure-results -type f -name "*.json" | xargs jq -r '.status' | grep passed | wc -l)
+          FAILED=$(find allure-results -type f -name "*.json" | xargs jq -r '.status' | grep failed | wc -l)
+          SKIPPED=$(find allure-results -type f -name "*.json" | xargs jq -r '.status' | grep skipped | wc -l)
           TOTAL=$((PASSED + FAILED + SKIPPED))
-
+          
           echo "PASSED=$PASSED" >> $GITHUB_ENV
           echo "FAILED=$FAILED" >> $GITHUB_ENV
           echo "SKIPPED=$SKIPPED" >> $GITHUB_ENV
