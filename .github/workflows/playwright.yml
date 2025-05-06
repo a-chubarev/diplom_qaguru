@@ -20,6 +20,17 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+
+      - name: Install playwright-test-stats
+        run: npm install -g playwright-test-stats
+
+      - name: Set environment variables
+        run: |
+          echo "BOOKSTORE_BASE_URL=${{ secrets.BOOKSTORE_BASE_URL }}" >> $GITHUB_ENV
+          echo "BOOKSTORE_CLIENT_LOGIN=${{ secrets.BOOKSTORE_CLIENT_LOGIN }}" >> $GITHUB_ENV
+          echo "BOOKSTORE_CLIENT_PASSWORD=${{ secrets.BOOKSTORE_CLIENT_PASSWORD }}" >> $GITHUB_ENV
+          echo "UI_TESTS_BASE_URL=${{ secrets.UI_TESTS_BASE_URL }}" >> $GITHUB_ENV
+
       # Переменная BASE URL не из env, а из secrets github
       - name: Set environment variables
         run: |

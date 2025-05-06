@@ -79,4 +79,14 @@ export class BookingController extends BaseController {
             status: response.status()
         };
     }
+
+    async pingService(){
+        const response = await this.request.send({
+            method: 'GET',
+            path: ENDPOINTS.PING
+        })
+        if (response.status() !== 200) {
+            throw new Error('Сервис недоступен')
+        }
+    }
 }
