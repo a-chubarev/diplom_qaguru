@@ -21,6 +21,12 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+      - name: Install allurectl
+        run: |
+          curl -o allurectl -L "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
+          chmod +x allurectl
+          sudo mv allurectl /usr/local/bin/
+
       - name: Get test stats from playwright-report/results
         id: test_stats
         run: |
@@ -87,12 +93,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-history
-
-      - name: Install allurectl
-        run: |
-            curl -o allurectl -L "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
-            chmod +x allurectl
-            sudo mv allurectl /usr/local/bin/
 
       - name: Upload results to Allure TestOps
         if: always()
